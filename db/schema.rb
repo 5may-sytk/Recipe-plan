@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_25_092832) do
+ActiveRecord::Schema.define(version: 2025_05_25_103442) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -52,12 +52,67 @@ ActiveRecord::Schema.define(version: 2025_05_25_092832) do
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
+  create_table "dish_ingredients", force: :cascade do |t|
+    t.integer "dish_id", null: false
+    t.integer "ingredient_id", null: false
+    t.float "quantity", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["dish_id"], name: "index_dish_ingredients_on_dish_id"
+    t.index ["ingredient_id"], name: "index_dish_ingredients_on_ingredient_id"
+  end
+
+  create_table "dishes", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "text"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "fridge_items", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "ingredient_id", null: false
+    t.float "quantity", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["ingredient_id"], name: "index_fridge_items_on_ingredient_id"
+    t.index ["user_id"], name: "index_fridge_items_on_user_id"
+  end
+
+  create_table "ingredients", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "unit_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["unit_id"], name: "index_ingredients_on_unit_id"
+  end
+
+  create_table "mealplans", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "dish_id", null: false
+    t.date "date", null: false
+    t.integer "meal_type", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["dish_id"], name: "index_mealplans_on_dish_id"
+    t.index ["user_id"], name: "index_mealplans_on_user_id"
+  end
+
+  create_table "units", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "base_unit", null: false
+    t.float "conversion_rate", default: 1.0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+    t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -66,4 +121,11 @@ ActiveRecord::Schema.define(version: 2025_05_25_092832) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "dish_ingredients", "dishes"
+  add_foreign_key "dish_ingredients", "ingredients"
+  add_foreign_key "fridge_items", "ingredients"
+  add_foreign_key "fridge_items", "users"
+  add_foreign_key "ingredients", "units"
+  add_foreign_key "mealplans", "dishes"
+  add_foreign_key "mealplans", "users"
 end

@@ -5,6 +5,15 @@ Rails.application.routes.draw do
   end
 
   scope module: :public do
+    resources :meal_plans do
+      collection do
+        get :collective_registration
+        post :collective_registration_submit
+      end
+    end
+    resources :dishes
+    resources :ingredients
+    resources :fridge_items
   end
 
 
